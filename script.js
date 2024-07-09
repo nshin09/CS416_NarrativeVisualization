@@ -3,15 +3,17 @@ const scenes = [
         d3.select("#visualization").html("");
 
         d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
+            // Sort data by highway mpg
             data.sort((a, b) => d3.descending(+a.HighwayMPG, +b.HighwayMPG));
 
             const svg = d3.select("#visualization").append("svg")
                 .attr("width", "100%")
-                .attr("height", "100%");
+                .attr("height", "100%")
+                .attr("viewBox", "0 0 800 600");
 
             const margin = { top: 20, right: 30, bottom: 40, left: 150 },
-                width = +svg.attr("width").replace('%', '') - margin.left - margin.right,
-                height = +svg.attr("height").replace('%', '') - margin.top - margin.bottom;
+                width = 800 - margin.left - margin.right,
+                height = 600 - margin.top - margin.bottom;
 
             const g = svg.append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -42,7 +44,8 @@ const scenes = [
             g.append("g")
                 .attr("class", "axis axis--y")
                 .call(d3.axisLeft(y));
-            
+
+            // Add an annotation
             g.append("text")
                 .attr("class", "annotation")
                 .attr("x", x(data[0].HighwayMPG) + 10)
