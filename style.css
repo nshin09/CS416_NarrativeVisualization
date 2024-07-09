@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+}
+#visualization {
+    width: 80%;
+    height: 80%;
+}
+#controls {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin-top: 20px;
+}
+.annotation {
+    font-size: 14px;
+    font-weight: bold;
+    fill: red;
+}
