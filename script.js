@@ -28,14 +28,14 @@ const scenes = [
             const y = d3.scaleBand()
                 .range([height, 0])
                 .padding(0.1)
-                .domain(data.map(d => d.Make + ' ' + d.Model));
+                .domain(data.map(d => d.Make + ' ' + d.Fuel));
 
             g.selectAll(".bar")
                 .data(data)
                 .enter().append("rect")
                 .attr("class", "bar")
                 .attr("x", 0)
-                .attr("y", d => y(d.Make + ' ' + d.Model))
+                .attr("y", d => y(d.Make + ' ' + d.Fuel))
                 .attr("width", d => x(d.AverageHighwayMPG))
                 .attr("height", y.bandwidth());
 
@@ -52,8 +52,8 @@ const scenes = [
             g.append("text")
                 .attr("class", "annotation")
                 .attr("x", x(data[0].AverageHighwayMPG) + 10)
-                .attr("y", y(data[0].Make + ' ' + data[0].Model) + y.bandwidth() / 2)
-                .text(`Highest MPG: ${data[0].Make} ${data[0].Model} (${data[0].AverageHighwayMPG})`);
+                .attr("y", y(data[0].Make + ' ' + data[0].Fuel) + y.bandwidth() / 2)
+                .text(`Highest MPG: ${data[0].Make} ${data[0].Fuel} (${data[0].AverageHighwayMPG})`);
         }).catch(function(error) {
             console.error("Error loading the data: ", error);
         });
