@@ -7,7 +7,7 @@ const scenes = [
             data.forEach(d => {
                 d.AverageHighwayMPG = +d.AverageHighwayMPG;
             });
-            data.sort((a, b) => d3.descending(a.AverageHighwayMPG, b.AverageHighwayMPG));
+            data.sort((a, b) => d3.ascending(a.AverageHighwayMPG, b.AverageHighwayMPG));
 
             const svg = d3.select("#visualization").append("svg")
                 .attr("width", "100%")
