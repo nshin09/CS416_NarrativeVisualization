@@ -34,10 +34,12 @@ const scenes = [
                 .data(data)
                 .enter().append("rect")
                 .attr("class", "bar")
+                .style("font-size", "12px") // Adjust font size here
                 .attr("x", 0)
                 .attr("y", d => y(d.Make + ' ' + d.Fuel))
                 .attr("width", d => x(d.AverageHighwayMPG))
                 .attr("height", y.bandwidth());
+         
 
             g.append("g")
                 .attr("class", "axis axis--x")
