@@ -4,7 +4,7 @@ const scenes = [
 
         d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
             // Sort data by highway mpg
-            data.sort((a, b) => d3.descending(+a.HighwayMPG, +b.HighwayMPG));
+            data.sort((a, b) => d3.descending(+a.AverageHighwayMPG, +b.AverageHighwayMPG));
 
             const svg = d3.select("#visualization").append("svg")
                 .attr("width", "100%")
@@ -20,7 +20,7 @@ const scenes = [
 
             const x = d3.scaleLinear()
                 .range([0, width])
-                .domain([0, d3.max(data, d => +d.HighwayMPG)]);
+                .domain([0, d3.max(data, d => +d.AverageHighwayMPG)]);
 
             const y = d3.scaleBand()
                 .range([height, 0])
@@ -33,7 +33,7 @@ const scenes = [
                 .attr("class", "bar")
                 .attr("x", 0)
                 .attr("y", d => y(d.Make + ' ' + d.Model))
-                .attr("width", d => x(+d.HighwayMPG))
+                .attr("width", d => x(+d.AverageHighwayMPG))
                 .attr("height", y.bandwidth());
 
             g.append("g")
@@ -48,7 +48,7 @@ const scenes = [
             // Add an annotation
             g.append("text")
                 .attr("class", "annotation")
-                .attr("x", x(data[0].HighwayMPG) + 10)
+                .attr("x", x(data[0].AverageHighwayMPG) + 10)
                 .attr("y", y(data[0].Make + ' ' + data[0].Model) + y.bandwidth() / 2)
                 .text("Highest MPG: " + data[0].Make + ' ' + data[0].Model);
         }).catch(function(error) {
