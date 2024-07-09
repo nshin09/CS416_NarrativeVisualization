@@ -48,12 +48,22 @@ const scenes = [
                 .attr("class", "axis axis--y")
                 .call(d3.axisLeft(y));
 
-            // Add an annotation
-            g.append("text")
-                .attr("class", "annotation")
-                .attr("x", x(data[0].AverageHighwayMPG) + 10)
-                .attr("y", y(data[0].Make + ' ' + data[0].Fuel) + y.bandwidth() / 2)
-                .text(`Highest MPG: ${data[0].Make} ${data[0].Fuel} (${data[0].AverageHighwayMPG})`);
+            // Add x-axis title
+            svg.append("text")
+                .attr("class", "axis-title")
+                .attr("text-anchor", "middle")
+                .attr("x", width / 2)
+                .attr("y", height + margin.top + 30)
+                .text("Average Highway MPG");
+
+            // Add y-axis title
+            svg.append("text")
+                .attr("class", "axis-title")
+                .attr("text-anchor", "middle")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -(height / 2))
+                .attr("y", -margin.left + 20)
+                .text("Make and Fuel");
         }).catch(function(error) {
             console.error("Error loading the data: ", error);
         });
@@ -79,5 +89,4 @@ d3.select("#next").on("click", () => {
         updateScene();
     }
 });
-
-updateScene(); // Initialize the first scene
+updateScene();
