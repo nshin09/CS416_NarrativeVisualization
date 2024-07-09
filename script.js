@@ -3,24 +3,27 @@ const scenes = [
         d3.select("#visualization").html("");
 
         d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
-            // Sort data by highway mpg
-            data.sort((a, b) => d3.descending(+a.AverageHighwayMPG, +b.AverageHighwayMPG));
+            // Parse data and sort by highway mpg
+            data.forEach(d => {
+                d.AverageHighwayMPG = +d.AverageHighwayMPG;
+            });
+            data.sort((a, b) => d3.descending(a.AverageHighwayMPG, b.AverageHighwayMPG));
 
             const svg = d3.select("#visualization").append("svg")
                 .attr("width", "100%")
                 .attr("height", "100%")
-                .attr("viewBox", "0 0 800 600");
+                .attr("viewBox", "0 0 960 500");
 
-            const margin = { top: 20, right: 30, bottom: 40, left: 150 },
-                width = 800 - margin.left - margin.right,
-                height = 600 - margin.top - margin.bottom;
+            const margin = { top: 20, right: 30, bottom: 40, left: 200 },
+                width = 960 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
 
             const g = svg.append("g")
                 .attr("transform", `translate(${margin.left},${margin.top})`);
 
             const x = d3.scaleLinear()
                 .range([0, width])
-                .domain([0, d3.max(data, d => +d.AverageHighwayMPG)]);
+                .domain([0, d3.max(data, d => d.AverageHighwayMPG)]);
 
             const y = d3.scaleBand()
                 .range([height, 0])
@@ -33,7 +36,7 @@ const scenes = [
                 .attr("class", "bar")
                 .attr("x", 0)
                 .attr("y", d => y(d.Make + ' ' + d.Model))
-                .attr("width", d => x(+d.AverageHighwayMPG))
+                .attr("width", d => x(d.AverageHighwayMPG))
                 .attr("height", y.bandwidth());
 
             g.append("g")
@@ -50,7 +53,7 @@ const scenes = [
                 .attr("class", "annotation")
                 .attr("x", x(data[0].AverageHighwayMPG) + 10)
                 .attr("y", y(data[0].Make + ' ' + data[0].Model) + y.bandwidth() / 2)
-                .text("Highest MPG: " + data[0].Make + ' ' + data[0].Model);
+                .text(`Highest MPG: ${data[0].Make} ${data[0].Model} (${data[0].AverageHighwayMPG})`);
         }).catch(function(error) {
             console.error("Error loading the data: ", error);
         });
