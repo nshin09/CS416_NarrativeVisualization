@@ -4,7 +4,7 @@ const scenes = [
 
         d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
             // Parse data and filter out entries with Fuel type "Electric"
-            data = data.filter(d => d.Fuel !== "Electric");
+            data = data.filter(d => d.Fuel !== "Electricity");
 
             // Parse AverageHighwayMPG as a number
             data.forEach(d => {
@@ -79,7 +79,7 @@ const scenes = [
 
         d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
             // Parse data and filter out entries with Fuel type "Electric"
-            data = data.filter(d => d.Fuel !== "Electric");
+            data = data.filter(d => d.Fuel !== "Electricity");
 
             // Parse MPG values as numbers
             data.forEach(d => {
