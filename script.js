@@ -11,8 +11,8 @@ const scenes = [
                 d.AverageHighwayMPG = +d.AverageHighwayMPG;
             });
 
-            // Sort data by AverageHighwayMPG in ascending order
-            data.sort((a, b) => d3.ascending(a.AverageHighwayMPG, b.AverageHighwayMPG));
+            // Sort data by AverageHighwayMPG in descending order
+            data.sort((a, b) => d3.descending(a.AverageHighwayMPG, b.AverageHighwayMPG));
 
             const svg = d3.select("#visualization").append("svg")
                 .attr("width", "100%")
@@ -112,8 +112,8 @@ const scenes = [
                 .padding(0.1);
 
             function updateChart(metric) {
-                // Sort data by selected metric in ascending order
-                data.sort((a, b) => d3.ascending(a[metric], b[metric]));
+                // Sort data by selected metric in descending order
+                data.sort((a, b) => d3.descending(a[metric], b[metric]));
 
                 x.domain([0, d3.max(data, d => d[metric])]);
                 y.domain(data.map(d => d.Make + ' ' + d.Fuel));
@@ -185,6 +185,9 @@ const scenes = [
         d3.select("#visualization").html("");
 
         d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
+            // Parse data and filter out entries with Fuel type "Electricity"
+            data = data.filter(d => d.Fuel !== "Electricity");
+
             // Parse MPG values as numbers
             data.forEach(d => {
                 d.AverageHighwayMPG = +d.AverageHighwayMPG;
@@ -219,7 +222,7 @@ const scenes = [
             function updateChart() {
                 // Filter and sort data by selected metric and fuel types
                 const filteredData = data.filter(d => selectedFuelTypes.includes(d.Fuel));
-                filteredData.sort((a, b) => d3.ascending(a[selectedMetric], b[selectedMetric]));
+                filteredData.sort((a, b) => d3.descending(a[selectedMetric], b[selectedMetric]));
 
                 x.domain([0, d3.max(filteredData, d => d[selectedMetric])]);
                 y.domain(filteredData.map(d => d.Make + ' ' + d.Fuel));
@@ -325,4 +328,3 @@ d3.select("#next").on("click", () => {
 });
 
 updateScene();
-
