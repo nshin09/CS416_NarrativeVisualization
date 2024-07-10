@@ -11,8 +11,8 @@ const scenes = [
                 d.AverageHighwayMPG = +d.AverageHighwayMPG;
             });
 
-            // Sort data by AverageHighwayMPG in descending order
-            data.sort((a, b) => d3.descending(a.AverageHighwayMPG, b.AverageHighwayMPG));
+            // Sort data by AverageHighwayMPG in ascending order
+            data.sort((a, b) => d3.ascending(a.AverageHighwayMPG, b.AverageHighwayMPG));
 
             const svg = d3.select("#visualization").append("svg")
                 .attr("width", "100%")
@@ -44,7 +44,7 @@ const scenes = [
                 .attr("y", d => y(d.Make + ' ' + d.Fuel))
                 .attr("width", d => x(d.AverageHighwayMPG))
                 .attr("height", y.bandwidth());
-         
+
             g.append("g")
                 .attr("class", "axis axis--x")
                 .attr("transform", `translate(0,${height})`)
@@ -89,7 +89,7 @@ const scenes = [
             });
 
             // Initial metric
-            let selectedMetric = "AverageHighwayMPG";
+            let selectedMetric = "AverageCityMPG";
 
             // Create the SVG container
             const svg = d3.select("#visualization").append("svg")
@@ -112,8 +112,8 @@ const scenes = [
                 .padding(0.1);
 
             function updateChart(metric) {
-                // Sort data by selected metric in descending order
-                data.sort((a, b) => d3.descending(a[metric], b[metric]));
+                // Sort data by selected metric in ascending order
+                data.sort((a, b) => d3.ascending(a[metric], b[metric]));
 
                 x.domain([0, d3.max(data, d => d[metric])]);
                 y.domain(data.map(d => d.Make + ' ' + d.Fuel));
@@ -180,6 +180,117 @@ const scenes = [
         }).catch(function(error) {
             console.error("Error loading the data: ", error);
         });
+    },
+    function scene3() {
+        d3.select("#visualization").html("");
+
+        d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
+            // Parse MPG values as numbers
+            data.forEach(d => {
+                d.AverageHighwayMPG = +d.AverageHighwayMPG;
+                d.AverageCityMPG = +d.AverageCityMPG;
+                d.AverageBothMPG = (d.AverageHighwayMPG + d.AverageCityMPG) / 2;
+            });
+
+            // Initial metric and fuel types
+            let selectedMetric = "AverageCityMPG";
+            let selectedFuelTypes = ["Gasoline", "Diesel", "Electricity"];
+
+            // Create the SVG container
+            const svg = d3.select("#visualization").append("svg")
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("viewBox", "0 0 960 500");
+
+            const margin = { top: 20, right: 30, bottom: 40, left: 200 },
+                width = 960 - margin.left - margin.right,
+                height = 500 - margin.top - margin.bottom;
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleLinear()
+                .range([0, width]);
+
+            const y = d3.scaleBand()
+                .range([height, 0])
+                .padding(0.1);
+
+            function updateChart() {
+                // Filter and sort data by selected metric and fuel types
+                const filteredData = data.filter(d => selectedFuelTypes.includes(d.Fuel));
+                filteredData.sort((a, b) => d3.ascending(a[selectedMetric], b[selectedMetric]));
+
+                x.domain([0, d3.max(filteredData, d => d[selectedMetric])]);
+                y.domain(filteredData.map(d => d.Make + ' ' + d.Fuel));
+
+                const bars = g.selectAll(".bar")
+                    .data(filteredData, d => d.Make + ' ' + d.Fuel);
+
+                bars.enter().append("rect")
+                    .attr("class", "bar")
+                    .attr("x", 0)
+                    .attr("y", d => y(d.Make + ' ' + d.Fuel))
+                    .attr("height", y.bandwidth())
+                    .merge(bars)
+                    .transition()
+                    .duration(1000)
+                    .attr("width", d => x(d[selectedMetric]))
+                    .attr("y", d => y(d.Make + ' ' + d.Fuel));
+
+                bars.exit().remove();
+
+                g.select(".axis--x")
+                    .transition()
+                    .duration(1000)
+                    .call(d3.axisBottom(x).ticks(10));
+
+                g.select(".axis--y")
+                    .transition()
+                    .duration(1000)
+                    .call(d3.axisLeft(y));
+            }
+
+            g.append("g")
+                .attr("class", "axis axis--x")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).ticks(10));
+
+            g.append("g")
+                .attr("class", "axis axis--y")
+                .call(d3.axisLeft(y));
+
+            // Add x-axis title
+            svg.append("text")
+                .attr("class", "axis-title")
+                .attr("text-anchor", "middle")
+                .attr("x", width / 2)
+                .attr("y", height + margin.top + 30)
+                .text("MPG");
+
+            // Add y-axis title
+            svg.append("text")
+                .attr("class", "axis-title")
+                .attr("text-anchor", "middle")
+                .attr("transform", "rotate(-90)")
+                .attr("x", -(height / 2))
+                .attr("y", -margin.left + 20)
+                .text("Make and Fuel");
+
+            updateChart();
+
+            d3.select("#metric").on("change", function() {
+                selectedMetric = d3.select(this).property("value");
+                updateChart();
+            });
+
+            d3.select("#fuel").on("change", function() {
+                selectedFuelTypes = Array.from(d3.select(this).property("selectedOptions"), option => option.value);
+                updateChart();
+            });
+        }).catch(function(error) {
+            console.error("Error loading the data: ", error);
+        });
     }
 ];
 
@@ -187,10 +298,15 @@ let currentScene = 0;
 
 function updateScene() {
     scenes[currentScene]();
-    if (currentScene === 1) {
+    if (currentScene === 1 || currentScene === 2) {
         d3.select("#metric-selection").style("display", "block");
     } else {
         d3.select("#metric-selection").style("display", "none");
+    }
+    if (currentScene === 2) {
+        d3.select("#fuel-selection").style("display", "block");
+    } else {
+        d3.select("#fuel-selection").style("display", "none");
     }
 }
 
@@ -209,5 +325,4 @@ d3.select("#next").on("click", () => {
 });
 
 updateScene();
-
 
