@@ -2,29 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Car Data Visualization</title>
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <title>D3 Visualization</title>
     <style>
         .axis-title {
-            font-size: 14px;
-            font-weight: bold;
+            font-size: 16px;
+        }
+        .bar {
+            fill: steelblue;
+        }
+        .bar:hover {
+            fill: orange;
+        }
+        .axis--x path {
+            display: none;
+        }
+        .axis--y path {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div>
+    <div id="visualization"></div>
+    <div id="controls">
         <button id="prev">Previous</button>
         <button id="next">Next</button>
     </div>
-    <div id="metric-selection">
-        <label for="metric">Select Metric: </label>
+    <div id="metric-selection" style="display: none;">
+        <label for="metric">Select Metric:</label>
         <select id="metric">
-            <option value="AverageHighwayMPG">Average Highway MPG</option>
             <option value="AverageCityMPG">Average City MPG</option>
+            <option value="AverageHighwayMPG">Average Highway MPG</option>
             <option value="AverageBothMPG">Average of Both</option>
         </select>
     </div>
-    <div id="visualization"></div>
-    <script src="script.js"></script>
-</body>
-</html>
+    <div id="fuel-selection" style="display: none;">
+        <label for="fuel">Include Fuel Type:</label>
+        <select id="fuel" multiple>
+            <option value="Gasoline">Gasoline</option>
+            <option value="Diesel">Diesel</option>
+            <option value="Electricity">Electric</option>
+        </select>
+    </div>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script>
