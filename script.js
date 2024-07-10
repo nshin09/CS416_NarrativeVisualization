@@ -70,22 +70,22 @@ const scenes = [
                 .attr("x", -(height / 2))
                 .attr("y", 10)
                 .text("Make, Fuel");
-           
-            // Add annotation
-            const annotationX = x(d3.max(data, d => d.AverageHighwayMPG)) + margin.left + 20;
-            const annotationY = y("Mitsubishi Gasoline") + margin.top + y.bandwidth() / 2;
+           // add annotation 
+            const annotationX = x(d3.max(data, d => d.AverageHighwayMPG)) + margin.left;
+            const annotationY = y("Mitsubishi Gasoline") + margin.top;
 
             svg.append("line")
-                .attr("x1", x(d3.max(data, d => d.AverageHighwayMPG)) + margin.left)
-                .attr("y1", y("Mitsubishi Gasoline") + margin.top + y.bandwidth() / 2)
+                .attr("x1", annotationX)
+                .attr("y1", annotationY)
                 .attr("x2", annotationX)
-                .attr("y2", annotationY)
+                .attr("y2", annotationY - 30)
                 .attr("stroke", "black");
 
             svg.append("text")
-                .attr("x", annotationX + 10)
-                .attr("y", annotationY)
+                .attr("x", annotationX)
+                .attr("y", annotationY - 40)
                 .attr("dy", ".35em")
+                .attr("text-anchor", "middle")
                 .style("font-size", "12px")
                 .text("Mitsubishi seems to be leading in fuel efficiency");
         }).catch(function(error) {
