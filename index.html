@@ -36,17 +36,16 @@
         </select>
     </div>
     <div id="fuel-selection" style="display: none;">
-        <label for="fuel">Include Fuel Type:</label>
-        <select id="fuel" multiple>
-            <option value="Gasoline">Gasoline</option>
-            <option value="Diesel">Diesel</option>
-            <option value="Electricity">Electric</option>
-        </select>
+        <label>Include Fuel Type:</label>
+        <label><input type="checkbox" id="fuel-gasoline" value="Gasoline" checked> Gasoline</label>
+        <label><input type="checkbox" id="fuel-diesel" value="Diesel" checked> Diesel</label>
+        <label><input type="checkbox" id="fuel-hybrid" value="Electricity" checked> Electric</label>
     </div>
 
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
