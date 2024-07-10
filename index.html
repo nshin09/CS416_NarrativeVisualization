@@ -2,47 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>D3 Visualization</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuel Efficiency Narrative</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <style>
-        .axis-title {
-            font-size: 16px;
-        }
         .bar {
             fill: steelblue;
         }
-        .bar:hover {
-            fill: orange;
+        .axis-title {
+            font-size: 14px;
+            font-weight: bold;
         }
-        .axis--x path {
-            display: none;
+        #visualization {
+            margin-top: 50px;
         }
-        .axis--y path {
-            display: none;
+        #title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
+    <div id="title">Fuel Efficiency Narrative</div>
     <div id="visualization"></div>
-    <div id="controls">
-        <button id="prev">Previous</button>
-        <button id="next">Next</button>
-    </div>
     <div id="metric-selection" style="display: none;">
         <label for="metric">Select Metric:</label>
         <select id="metric">
-            <option value="AverageCityMPG">Average City MPG</option>
-            <option value="AverageHighwayMPG">Average Highway MPG</option>
-            <option value="AverageBothMPG">Average of Both</option>
+            <option value="AverageCityMPG">City MPG</option>
+            <option value="AverageHighwayMPG">Highway MPG</option>
+            <option value="AverageBothMPG">Combined MPG</option>
         </select>
     </div>
     <div id="fuel-selection" style="display: none;">
-        <label>Include Fuel Type:</label>
         <label><input type="checkbox" id="fuel-gasoline" value="Gasoline" checked> Gasoline</label>
         <label><input type="checkbox" id="fuel-diesel" value="Diesel" checked> Diesel</label>
-        <label><input type="checkbox" id="fuel-hybrid" value="Electricity" checked> Electric</label>
+        <label><input type="checkbox" id="fuel-hybrid" value="Hybrid" checked> Hybrid</label>
     </div>
-
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <button id="prev">Previous</button>
+    <button id="next">Next</button>
     <script src="script.js"></script>
 </body>
 </html>
