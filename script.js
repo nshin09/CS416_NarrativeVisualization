@@ -70,29 +70,24 @@ const scenes = [
                 .attr("x", -(height / 2))
                 .attr("y", 10)
                 .text("Make, Fuel");
-            
-            // Add annotation for the bar with the highest value
-            const highestValue = d3.max(data, d => d.AverageHighwayMPG);
-            const highestBar = data.find(d => d.AverageHighwayMPG === highestValue);
+           
+            // Add annotation
+            const annotationX = x(d3.max(data, d => d.AverageHighwayMPG)) + margin.left + 20;
+            const annotationY = y("Mitsubishi Gasoline") + margin.top + y.bandwidth() / 2;
 
-            const annotation = svg.append("g")
-                .attr("class", "annotation")
-                .attr("transform", `translate(${margin.left + x(highestValue)},${margin.top + y(highestBar.Make + ' ' + highestBar.Fuel) + y.bandwidth() / 2})`);
-
-            annotation.append("line")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", 50)
-                .attr("y2", -50)
+            svg.append("line")
+                .attr("x1", x(d3.max(data, d => d.AverageHighwayMPG)) + margin.left)
+                .attr("y1", y("Mitsubishi Gasoline") + margin.top + y.bandwidth() / 2)
+                .attr("x2", annotationX)
+                .attr("y2", annotationY)
                 .attr("stroke", "black");
 
-            annotation.append("text")
-                .attr("x", 55)
-                .attr("y", -55)
-                .attr("text-anchor", "start")
-                .text("Mitsubishi seems to be leading in fuel efficiency")
+            svg.append("text")
+                .attr("x", annotationX + 10)
+                .attr("y", annotationY)
+                .attr("dy", ".35em")
                 .style("font-size", "12px")
-                .style("background-color", "white");
+                .text("Mitsubishi seems to be leading in fuel efficiency");
         }).catch(function(error) {
             console.error("Error loading the data: ", error);
         });
