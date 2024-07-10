@@ -3,7 +3,7 @@ const scenes = [
         d3.select("#visualization").html("");
 
         d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
-            // Parse data and filter out entries with Fuel type "Electric"
+            // Parse data and filter out entries with Fuel type "Electricity"
             data = data.filter(d => d.Fuel !== "Electricity");
 
             // Parse AverageHighwayMPG as a number
@@ -11,8 +11,8 @@ const scenes = [
                 d.AverageHighwayMPG = +d.AverageHighwayMPG;
             });
 
-            // Sort data by AverageHighwayMPG
-            data.sort((a, b) => d3.ascending(a.AverageHighwayMPG, b.AverageHighwayMPG));
+            // Sort data by AverageHighwayMPG in descending order
+            data.sort((a, b) => d3.descending(a.AverageHighwayMPG, b.AverageHighwayMPG));
 
             const svg = d3.select("#visualization").append("svg")
                 .attr("width", "100%")
@@ -78,7 +78,7 @@ const scenes = [
         d3.select("#visualization").html("");
 
         d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
-            // Parse data and filter out entries with Fuel type "Electric"
+            // Parse data and filter out entries with Fuel type "Electricity"
             data = data.filter(d => d.Fuel !== "Electricity");
 
             // Parse MPG values as numbers
@@ -112,8 +112,8 @@ const scenes = [
                 .padding(0.1);
 
             function updateChart(metric) {
-                // Sort data by selected metric
-                data.sort((a, b) => d3.ascending(a[metric], b[metric]));
+                // Sort data by selected metric in descending order
+                data.sort((a, b) => d3.descending(a[metric], b[metric]));
 
                 x.domain([0, d3.max(data, d => d[metric])]);
                 y.domain(data.map(d => d.Make + ' ' + d.Fuel));
@@ -209,4 +209,5 @@ d3.select("#next").on("click", () => {
 });
 
 updateScene();
+
 
