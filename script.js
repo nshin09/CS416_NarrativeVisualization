@@ -39,6 +39,7 @@ const scenes = [
                 .data(data)
                 .enter().append("rect")
                 .attr("class", "bar")
+                .style("font-size", "8px") // Adjust font size here
                 .attr("x", 0)
                 .attr("y", d => y(d.Make + ' ' + d.Fuel))
                 .attr("width", d => x(d.AverageHighwayMPG))
@@ -184,13 +185,21 @@ const scenes = [
         d3.select("#visualization").html("");
 
         d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
-            // Parse data
+            // Parse data and filter out entries with Fuel type "Electricity"
+           // data = data.filter(d => d.Fuel !== "Electricity");
+
+            // Parse MPG values as numbers
             data.forEach(d => {
                 d.AverageHighwayMPG = +d.AverageHighwayMPG;
                 d.AverageCityMPG = +d.AverageCityMPG;
                 d.AverageBothMPG = (d.AverageHighwayMPG + d.AverageCityMPG) / 2;
             });
 
+            // Initial metric and fuel types
+            let selectedMetric = "AverageCityMPG";
+            let selectedFuelTypes = ["Gasoline", "Diesel", "Electricity"];
+
+            // Create the SVG container
             const svg = d3.select("#visualization").append("svg")
                 .attr("width", "100%")
                 .attr("height", "100%")
@@ -210,19 +219,12 @@ const scenes = [
                 .range([height, 0])
                 .padding(0.1);
 
-            // Filter options
-            const fuelTypes = ["Gasoline", "Diesel", "Electricity"];
-
-            d3.select("#fuel-selection").style("display", "block");
-            fuelTypes.forEach(fuel => {
-                d3.select(`#fuel-${fuel.toLowerCase()}`).on("change", updateChart);
-            });
-
             function updateChart() {
-                const selectedFuels = fuelTypes.filter(fuel => d3.select(`#fuel-${fuel.toLowerCase()}`).property("checked"));
-                const filteredData = data.filter(d => selectedFuels.includes(d.Fuel));
+                // Filter and sort data by selected metric and fuel types
+                const filteredData = data.filter(d => selectedFuelTypes.includes(d.Fuel));
+                filteredData.sort((a, b) => d3.descending(a[selectedMetric], b[selectedMetric]));
 
-                x.domain([0, d3.max(filteredData, d => d.AverageBothMPG)]);
+                x.domain([0, d3.max(filteredData, d => d[selectedMetric])]);
                 y.domain(filteredData.map(d => d.Make + ' ' + d.Fuel));
 
                 const bars = g.selectAll(".bar")
@@ -236,7 +238,7 @@ const scenes = [
                     .merge(bars)
                     .transition()
                     .duration(1000)
-                    .attr("width", d => x(d.AverageBothMPG))
+                    .attr("width", d => x(d[selectedMetric]))
                     .attr("y", d => y(d.Make + ' ' + d.Fuel));
 
                 bars.exit().remove();
@@ -267,7 +269,7 @@ const scenes = [
                 .attr("text-anchor", "middle")
                 .attr("x", margin.left + width / 2)
                 .attr("y", height + margin.top + 30)
-                .text("Average MPG");
+                .text("MPG");
 
             // Add y-axis title
             svg.append("text")
@@ -279,6 +281,25 @@ const scenes = [
                 .text("Make, Fuel");
 
             updateChart();
+
+            d3.select("#metric").on("change", function() {
+                selectedMetric = d3.select(this).property("value");
+                updateChart();
+            });
+
+            const fuelCheckboxes = ["#fuel-gasoline", "#fuel-diesel", "#fuel-hybrid"];
+            fuelCheckboxes.forEach(selector => {
+                d3.select(selector).on("change", function() {
+                    const checked = d3.select(this).property("checked");
+                    const value = d3.select(this).property("value");
+                    if (checked) {
+                        selectedFuelTypes.push(value);
+                    } else {
+                        selectedFuelTypes = selectedFuelTypes.filter(fuel => fuel !== value);
+                    }
+                    updateChart();
+                });
+            });
         }).catch(function(error) {
             console.error("Error loading the data: ", error);
         });
@@ -286,18 +307,33 @@ const scenes = [
 ];
 
 let currentScene = 0;
-scenes[currentScene]();
 
-d3.select("#next").on("click", function() {
-    currentScene = (currentScene + 1) % scenes.length;
+function updateScene() {
     scenes[currentScene]();
+    if (currentScene === 1 || currentScene === 2) {
+        d3.select("#metric-selection").style("display", "block");
+    } else {
+        d3.select("#metric-selection").style("display", "none");
+    }
+    if (currentScene === 2) {
+        d3.select("#fuel-selection").style("display", "block");
+    } else {
+        d3.select("#fuel-selection").style("display", "none");
+    }
+}
+
+d3.select("#prev").on("click", () => {
+    if (currentScene > 0) {
+        currentScene--;
+        updateScene();
+    }
 });
 
-d3.select("#prev").on("click", function() {
-    currentScene = (currentScene - 1 + scenes.length) % scenes.length;
-    scenes[currentScene]();
+d3.select("#next").on("click", () => {
+    if (currentScene < scenes.length - 1) {
+        currentScene++;
+        updateScene();
+    }
 });
-
 
 updateScene();
-
