@@ -216,7 +216,7 @@ const scenes = [
                         .attr("x", annotationX - 60)
                         .attr("dy", (d, i) => i * 15)
                         .text(d => d);
-            d3.select("#updateButton").on("click", function() {
+            d3.select("#metric").on("change", function() {
                 selectedMetric = d3.select(this).property("value");
                 g.selectAll(".annotation").remove();
                 updateChart();
