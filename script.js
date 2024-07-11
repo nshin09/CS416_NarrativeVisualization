@@ -368,10 +368,7 @@ function updateScene() {
         d3.select("#fuel-selection").style("display", "none");
     }
 }
-d3.select("#metric").on("change", function() {
-    currentMetric = this.value;
-    updateScene();
-});
+
 
 d3.select("#prev").on("click", () => {
     if (currentScene > 0) {
