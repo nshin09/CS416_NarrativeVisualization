@@ -220,8 +220,9 @@ const scenes = [
                     .attr("x", annotationX)
                     .attr("dy", (d, i) => i * 15)
                     .text(d => d);
+            }
             updateChart(selectedMetric);
-              }
+              
             d3.select("#metric").on("change", function() {
                 selectedMetric = d3.select(this).property("value");
                 updateChart(selectedMetric);
