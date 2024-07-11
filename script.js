@@ -83,7 +83,7 @@ const scenes = [
 
             svg.append("text")
                 .attr("x", annotationX - 30)
-                .attr("y", annotationY - 150)
+                .attr("y", annotationY - 140)
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
                 .style("font-size", "10px")
