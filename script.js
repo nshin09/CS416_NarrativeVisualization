@@ -82,8 +82,8 @@ const scenes = [
                 .attr("stroke", "black");
 
             svg.append("text")
-                .attr("x", annotationX)
-                .attr("y", annotationY - 130)
+                .attr("x", annotationX - 30)
+                .attr("y", annotationY - 160)
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
                 .style("font-size", "10px")
@@ -91,7 +91,7 @@ const scenes = [
                 .data(["Mitsubishi seems to be", "leading in fuel efficiency"])
                 .enter()
                 .append("tspan")
-                .attr("x", annotationX)
+                .attr("x", annotationX - 30)
                 .attr("dy", (d, i) => i * 15)
                 .text(d => d);
         }).catch(function(error) {
