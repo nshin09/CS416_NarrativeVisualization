@@ -325,17 +325,50 @@ const scenes = [
                 .attr("x", -(height / 2))
                 .attr("y", 10)
                 .text("Make, Fuel");
+            // add annotation
+            const annotationX = x(100) + margin.left;
+            const annotationY = y("Hyundai Electricity") + margin.top + y.bandwidth() / 2;
 
+        svg.append("circle")
+            .attr("class", "annotation")
+            .attr("cx", annotationX)
+            .attr("cy", annotationY)
+            .attr("r", 40)
+            .attr("stroke", "black")
+            .attr("fill", "none");
+
+        svg.append("line")
+            .attr("class", "annotation")
+            .attr("x1", annotationX)
+            .attr("y1", annotationY - 40)
+            .attr("x2", annotationX)
+            .attr("y2", annotationY - 80)
+            .attr("stroke", "black");
+
+        svg.append("text")
+            .attr("class", "annotation")
+            .attr("x", annotationX)
+            .attr("y", annotationY - 100)
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .style("font-size", "10px")
+            .text("But Electric Vehicles")
+            .append("tspan")
+            .attr("x", annotationX)
+            .attr("dy", "1.2em")
+            .text("Dominate in Fuel Efficiency");
             updateChart();
 
             d3.select("#metric").on("change", function() {
                 selectedMetric = d3.select(this).property("value");
+                svg.selectAll(".annotation").remove();
                 updateChart();
             });
 
             const fuelCheckboxes = ["#fuel-gasoline", "#fuel-diesel", "#fuel-hybrid"];
             fuelCheckboxes.forEach(selector => {
                 d3.select(selector).on("change", function() {
+                    svg.selectAll(".annotation").remove();
                     const checked = d3.select(this).property("checked");
                     const value = d3.select(this).property("value");
                     if (checked) {
