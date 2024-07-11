@@ -131,10 +131,10 @@ const scenes = [
                 .range([height, 0])
                 .padding(0.1);
 
-            function updateChart(metric) {
-                data.sort((a, b) => d3.descending(a[metric], b[metric]));
+            function updateChart() {
+                data.sort((a, b) => d3.descending(a[selectedMetric], b[selectedMetric]));
 
-                x.domain([0, d3.max(data, d => d[metric])]);
+                x.domain([0, d3.max(data, d => d[selectedMetric])]);
                 y.domain(data.map(d => d.Make + ' ' + d.Fuel));
 
                 const bars = g.selectAll(".bar")
@@ -164,7 +164,7 @@ const scenes = [
                     .call(d3.axisLeft(y));
 
                 g.selectAll(".annotation").remove();
-                if (metric === "AverageCityMPG") {
+                if (selectedMetric === "AverageCityMPG") {
                     const maxCityMPGData = data[0];
                     const annotationX = x(maxCityMPGData.AverageCityMPG) + margin.left;
                     const annotationY = y(maxCityMPGData.Make + ' ' + maxCityMPGData.Fuel) + margin.top;
@@ -218,11 +218,11 @@ const scenes = [
                 .attr("y", 10)
                 .text("Make, Fuel");
 
-            updateChart(selectedMetric);
+            updateChart();
 
             d3.select("#updateButton").on("click", function() {
-                selectedMetric = "AverageHighwayMPG";
-                updateChart(selectedMetric);
+                selectedMetric = d3.select(this).property("value");
+                updateChart();
             });
         }).catch(function(error) {
             console.error("Error loading the data: ", error);
