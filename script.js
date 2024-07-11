@@ -131,10 +131,10 @@ const scenes = [
                 .range([height, 0])
                 .padding(0.1);
 
-            function updateChart() {
-                data.sort((a, b) => d3.descending(a[selectedMetric], b[selectedMetric]));
+            function updateChart(Metric) {
+                data.sort((a, b) => d3.descending(a[Metric], b[Metric]));
 
-                x.domain([0, d3.max(data, d => d[selectedMetric])]);
+                x.domain([0, d3.max(data, d => d[Metric])]);
                 y.domain(data.map(d => d.Make + ' ' + d.Fuel));
 
                 const bars = g.selectAll(".bar")
@@ -148,7 +148,7 @@ const scenes = [
                     .merge(bars)
                     .transition()
                     .duration(1000)
-                    .attr("width", d => x(d[selectedMetric]))
+                    .attr("width", d => x(d[Metric]))
                     .attr("y", d => y(d.Make + ' ' + d.Fuel));
 
                 bars.exit().remove();
@@ -164,7 +164,7 @@ const scenes = [
                     .call(d3.axisLeft(y));
 
                 g.selectAll(".annotation").remove();
-                if (selectedMetric === "AverageCityMPG") {
+                if (Metric === "AverageCityMPG") {
                     const maxCityMPGData = data[0];
                     const annotationX = x(maxCityMPGData.AverageCityMPG) + margin.left;
                     const annotationY = y(maxCityMPGData.Make + ' ' + maxCityMPGData.Fuel) + margin.top;
@@ -221,8 +221,8 @@ const scenes = [
             updateChart();
 
             d3.select("#updateButton").on("click", function() {
-                selectedMetric = d3.select(this).property("value");
-                updateChart();
+                selectedMetric = this.value;
+                updateChart(selectedMetric);
             });
         }).catch(function(error) {
             console.error("Error loading the data: ", error);
