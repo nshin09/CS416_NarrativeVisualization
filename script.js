@@ -162,7 +162,7 @@ const scenes = [
                     .transition()
                     .duration(1000)
                     .call(d3.axisLeft(y));
-                g.selectAll(".annotation").remove();
+                svg.selectAll(".annotation").remove();
                 if(selectedMetric === "AverageCityMPG"){
                      // add annotation
                     const maxCityMPGData = data[0];
