@@ -188,7 +188,7 @@ const scenes = [
                         .data(["When looking at MPG in the", "city, Lexus takes the lead."])
                         .enter()
                         .append("tspan")
-                        .attr("x", annotationX)
+                        .attr("x", annotationX - 60)
                         .attr("dy", (d, i) => i * 15)
                         .text(d => d);
                 }
