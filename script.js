@@ -131,10 +131,10 @@ const scenes = [
                 .range([height, 0])
                 .padding(0.1);
 
-            function updateChart(Metric) {
-                data.sort((a, b) => d3.descending(a[Metric], b[Metric]));
+            function updateChart() {
+                data.sort((a, b) => d3.descending(a[selectedMetric], b[selectedMetric]));
 
-                x.domain([0, d3.max(data, d => d[Metric])]);
+                x.domain([0, d3.max(data, d => d[selectedMetric])]);
                 y.domain(data.map(d => d.Make + ' ' + d.Fuel));
 
                 const bars = g.selectAll(".bar")
@@ -148,7 +148,7 @@ const scenes = [
                     .merge(bars)
                     .transition()
                     .duration(1000)
-                    .attr("width", d => x(d[Metric]))
+                    .attr("width", d => x(d[selectedMetric]))
                     .attr("y", d => y(d.Make + ' ' + d.Fuel));
 
                 bars.exit().remove();
@@ -162,36 +162,7 @@ const scenes = [
                     .transition()
                     .duration(1000)
                     .call(d3.axisLeft(y));
-
-                g.selectAll(".annotation").remove();
-                if (Metric === "AverageCityMPG") {
-                    const maxCityMPGData = data[0];
-                    const annotationX = x(maxCityMPGData.AverageCityMPG) + margin.left;
-                    const annotationY = y(maxCityMPGData.Make + ' ' + maxCityMPGData.Fuel) + margin.top;
-
-                    svg.append("line")
-                        .attr("class", "annotation")
-                        .attr("x1", annotationX)
-                        .attr("y1", annotationY)
-                        .attr("x2", annotationX)
-                        .attr("y2", annotationY - 120)
-                        .attr("stroke", "black");
-
-                    svg.append("text")
-                        .attr("class", "annotation")
-                        .attr("x", annotationX - 60)
-                        .attr("y", annotationY - 140)
-                        .attr("dy", ".35em")
-                        .attr("text-anchor", "middle")
-                        .style("font-size", "10px")
-                        .selectAll("tspan")
-                        .data(["When looking at MPG in the", "city, Lexus takes the lead."])
-                        .enter()
-                        .append("tspan")
-                        .attr("x", annotationX - 60)
-                        .attr("dy", (d, i) => i * 15)
-                        .text(d => d);
-                }
+                
             }
 
             g.append("g")
@@ -217,12 +188,38 @@ const scenes = [
                 .attr("x", -(height / 2))
                 .attr("y", 10)
                 .text("Make, Fuel");
+            updateChart();
+            // add annotation
+            const maxCityMPGData = data[0];
+            const annotationX = x(maxCityMPGData.AverageCityMPG) + margin.left;
+            const annotationY = y(maxCityMPGData.Make + ' ' + maxCityMPGData.Fuel) + margin.top;
 
-            updateChart(selectedMetric);
+                    svg.append("line")
+                        .attr("class", "annotation")
+                        .attr("x1", annotationX)
+                        .attr("y1", annotationY)
+                        .attr("x2", annotationX)
+                        .attr("y2", annotationY - 120)
+                        .attr("stroke", "black");
 
+                     svg.append("text")
+                        .attr("class", "annotation")
+                        .attr("x", annotationX - 60)
+                        .attr("y", annotationY - 140)
+                        .attr("dy", ".35em")
+                        .attr("text-anchor", "middle")
+                        .style("font-size", "10px")
+                        .selectAll("tspan")
+                        .data(["When looking at MPG in the", "city, Lexus takes the lead."])
+                        .enter()
+                        .append("tspan")
+                        .attr("x", annotationX - 60)
+                        .attr("dy", (d, i) => i * 15)
+                        .text(d => d);
             d3.select("#updateButton").on("click", function() {
                 selectedMetric = d3.select(this).property("value");
-                updateChart(selectedMetric);
+                g.selectAll(".annotation").remove();
+                updateChart();
             });
         }).catch(function(error) {
             console.error("Error loading the data: ", error);
