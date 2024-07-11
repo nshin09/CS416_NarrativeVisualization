@@ -195,7 +195,7 @@ const scenes = [
                 .attr("y", 10)
                 .text("Make, Fuel");
             // add annotation 
-              if (currentMetric === "Average City MPG") {
+              if (currentMetric === "AverageCityMPG") {
                 const maxCityMPGData = data[0];
                 const annotationX = x(maxCityMPGData.AverageCityMPG) + margin.left;
                 const annotationY = y(maxCityMPGData.Make + ' ' + maxCityMPGData.Fuel) + margin.top;
