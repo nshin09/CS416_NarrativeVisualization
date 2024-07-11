@@ -361,14 +361,14 @@ const scenes = [
 
             d3.select("#metric").on("change", function() {
                 selectedMetric = d3.select(this).property("value");
-                svg.selectAll(".annotation").remove();
+                //svg.selectAll(".annotation").remove();
                 updateChart();
             });
 
             const fuelCheckboxes = ["#fuel-gasoline", "#fuel-diesel", "#fuel-hybrid"];
             fuelCheckboxes.forEach(selector => {
                 d3.select(selector).on("change", function() {
-                    svg.selectAll(".annotation").remove();
+                    //svg.selectAll(".annotation").remove();
                     const checked = d3.select(this).property("checked");
                     const value = d3.select(this).property("value");
                     if (checked) {
