@@ -194,7 +194,32 @@ const scenes = [
                 .attr("x", -(height / 2))
                 .attr("y", 10)
                 .text("Make, Fuel");
+            // add annotation 
+              if (currentMetric === "Average City MPG") {
+                const maxCityMPGData = data[0];
+                const annotationX = x(maxCityMPGData.AverageCityMPG) + margin.left;
+                const annotationY = y(maxCityMPGData.Make + ' ' + maxCityMPGData.Fuel) + margin.top;
 
+                svg.append("line")
+                    .attr("x1", annotationX)
+                    .attr("y1", annotationY)
+                    .attr("x2", annotationX)
+                    .attr("y2", annotationY - 120)
+                    .attr("stroke", "black");
+
+                svg.append("text")
+                    .attr("x", annotationX - 30)
+                    .attr("y", annotationY - 140)
+                    .attr("dy", ".35em")
+                    .attr("text-anchor", "middle")
+                    .style("font-size", "10px")
+                    .selectAll("tspan")
+                    .data(["When looking at MPG in the", "city, Lexus takes the lead."])
+                    .enter()
+                    .append("tspan")
+                    .attr("x", annotationX)
+                    .attr("dy", (d, i) => i * 15)
+                    .text(d => d);
             updateChart(selectedMetric);
 
             d3.select("#metric").on("change", function() {
@@ -345,6 +370,10 @@ function updateScene() {
         d3.select("#fuel-selection").style("display", "none");
     }
 }
+d3.select("#metric").on("change", function() {
+    currentMetric = this.value;
+    updateScene();
+});
 
 d3.select("#prev").on("click", () => {
     if (currentScene > 0) {
