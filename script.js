@@ -221,7 +221,7 @@ const scenes = [
             updateChart();
 
             d3.select("#updateButton").on("click", function() {
-                selectedMetric = this.value;
+                selectedMetric = d3.select(this).property("value");
                 updateChart(selectedMetric);
             });
         }).catch(function(error) {
