@@ -162,9 +162,38 @@ const scenes = [
                     .transition()
                     .duration(1000)
                     .call(d3.axisLeft(y));
-                
-            }
+                g.selectAll(".annotation").remove();
+                if(selectedMetric === "AverageCityMPG"){
+                     // add annotation
+                    const maxCityMPGData = data[0];
+                    const annotationX = x(maxCityMPGData.AverageCityMPG) + margin.left;
+                    const annotationY = y(maxCityMPGData.Make + ' ' + maxCityMPGData.Fuel) + margin.top;
 
+                    svg.append("line")
+                        .attr("class", "annotation")
+                        .attr("x1", annotationX)
+                        .attr("y1", annotationY)
+                        .attr("x2", annotationX)
+                        .attr("y2", annotationY - 120)
+                        .attr("stroke", "black");
+
+                     svg.append("text")
+                        .attr("class", "annotation")
+                        .attr("x", annotationX - 60)
+                        .attr("y", annotationY - 140)
+                        .attr("dy", ".35em")
+                        .attr("text-anchor", "middle")
+                        .style("font-size", "10px")
+                        .selectAll("tspan")
+                        .data(["When looking at MPG in the", "city, Lexus takes the lead."])
+                        .enter()
+                        .append("tspan")
+                        .attr("x", annotationX - 60)
+                        .attr("dy", (d, i) => i * 15)
+                        .text(d => d);
+                    
+            }
+        }
             g.append("g")
                 .attr("class", "axis axis--x")
                 .attr("transform", `translate(0,${height})`)
@@ -189,36 +218,9 @@ const scenes = [
                 .attr("y", 10)
                 .text("Make, Fuel");
             updateChart();
-            // add annotation
-            const maxCityMPGData = data[0];
-            const annotationX = x(maxCityMPGData.AverageCityMPG) + margin.left;
-            const annotationY = y(maxCityMPGData.Make + ' ' + maxCityMPGData.Fuel) + margin.top;
-
-                    svg.append("line")
-                        .attr("class", "annotation")
-                        .attr("x1", annotationX)
-                        .attr("y1", annotationY)
-                        .attr("x2", annotationX)
-                        .attr("y2", annotationY - 120)
-                        .attr("stroke", "black");
-
-                     svg.append("text")
-                        .attr("class", "annotation")
-                        .attr("x", annotationX - 60)
-                        .attr("y", annotationY - 140)
-                        .attr("dy", ".35em")
-                        .attr("text-anchor", "middle")
-                        .style("font-size", "10px")
-                        .selectAll("tspan")
-                        .data(["When looking at MPG in the", "city, Lexus takes the lead."])
-                        .enter()
-                        .append("tspan")
-                        .attr("x", annotationX - 60)
-                        .attr("dy", (d, i) => i * 15)
-                        .text(d => d);
+           
             d3.select("#metric").on("change", function() {
                 selectedMetric = d3.select(this).property("value");
-                g.selectAll("annotation").remove();
                 updateChart();
             });
         }).catch(function(error) {
