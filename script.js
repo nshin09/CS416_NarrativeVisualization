@@ -102,20 +102,16 @@ const scenes = [
         d3.select("#visualization").html("");
 
         d3.csv("https://flunky.github.io/cars2017.csv").then(function(data) {
-            // Parse data and filter out entries with Fuel type "Electricity"
             data = data.filter(d => d.Fuel !== "Electricity");
 
-            // Parse MPG values as numbers
             data.forEach(d => {
                 d.AverageHighwayMPG = +d.AverageHighwayMPG;
                 d.AverageCityMPG = +d.AverageCityMPG;
                 d.AverageBothMPG = (d.AverageHighwayMPG + d.AverageCityMPG) / 2;
             });
 
-            // Initial metric
             let selectedMetric = "AverageCityMPG";
 
-            // Create the SVG container
             const svg = d3.select("#visualization").append("svg")
                 .attr("width", "100%")
                 .attr("height", "100%")
@@ -136,7 +132,6 @@ const scenes = [
                 .padding(0.1);
 
             function updateChart(metric) {
-                // Sort data by selected metric in descending order
                 data.sort((a, b) => d3.descending(a[metric], b[metric]));
 
                 x.domain([0, d3.max(data, d => d[metric])]);
@@ -167,6 +162,36 @@ const scenes = [
                     .transition()
                     .duration(1000)
                     .call(d3.axisLeft(y));
+
+                g.selectAll(".annotation").remove();
+                if (metric === "AverageCityMPG") {
+                    const maxCityMPGData = data[0];
+                    const annotationX = x(maxCityMPGData.AverageCityMPG) + margin.left;
+                    const annotationY = y(maxCityMPGData.Make + ' ' + maxCityMPGData.Fuel) + margin.top;
+
+                    svg.append("line")
+                        .attr("class", "annotation")
+                        .attr("x1", annotationX)
+                        .attr("y1", annotationY)
+                        .attr("x2", annotationX)
+                        .attr("y2", annotationY - 120)
+                        .attr("stroke", "black");
+
+                    svg.append("text")
+                        .attr("class", "annotation")
+                        .attr("x", annotationX - 30)
+                        .attr("y", annotationY - 140)
+                        .attr("dy", ".35em")
+                        .attr("text-anchor", "middle")
+                        .style("font-size", "10px")
+                        .selectAll("tspan")
+                        .data(["When looking at MPG in the", "city, Lexus takes the lead."])
+                        .enter()
+                        .append("tspan")
+                        .attr("x", annotationX)
+                        .attr("dy", (d, i) => i * 15)
+                        .text(d => d);
+                }
             }
 
             g.append("g")
@@ -178,7 +203,6 @@ const scenes = [
                 .attr("class", "axis axis--y")
                 .call(d3.axisLeft(y));
 
-            // Add x-axis title
             svg.append("text")
                 .attr("class", "axis-title")
                 .attr("text-anchor", "middle")
@@ -186,7 +210,6 @@ const scenes = [
                 .attr("y", height + margin.top + 30)
                 .text("MPG");
 
-            // Add y-axis title
             svg.append("text")
                 .attr("class", "axis-title")
                 .attr("text-anchor", "middle")
@@ -194,37 +217,11 @@ const scenes = [
                 .attr("x", -(height / 2))
                 .attr("y", 10)
                 .text("Make, Fuel");
-            // add annotation 
-              if (currentMetric === "AverageCityMPG") {
-                const maxCityMPGData = data[0];
-                const annotationX = x(maxCityMPGData.AverageCityMPG) + margin.left;
-                const annotationY = y(maxCityMPGData.Make + ' ' + maxCityMPGData.Fuel) + margin.top;
 
-                svg.append("line")
-                    .attr("x1", annotationX)
-                    .attr("y1", annotationY)
-                    .attr("x2", annotationX)
-                    .attr("y2", annotationY - 120)
-                    .attr("stroke", "black");
-
-                svg.append("text")
-                    .attr("x", annotationX - 30)
-                    .attr("y", annotationY - 140)
-                    .attr("dy", ".35em")
-                    .attr("text-anchor", "middle")
-                    .style("font-size", "10px")
-                    .selectAll("tspan")
-                    .data(["When looking at MPG in the", "city, Lexus takes the lead."])
-                    .enter()
-                    .append("tspan")
-                    .attr("x", annotationX)
-                    .attr("dy", (d, i) => i * 15)
-                    .text(d => d);
-            }
             updateChart(selectedMetric);
-              
-            d3.select("#metric").on("change", function() {
-                selectedMetric = d3.select(this).property("value");
+
+            d3.select("#updateButton").on("click", function() {
+                selectedMetric = "AverageHighwayMPG";
                 updateChart(selectedMetric);
             });
         }).catch(function(error) {
