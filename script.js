@@ -218,7 +218,7 @@ const scenes = [
                         .text(d => d);
             d3.select("#metric").on("change", function() {
                 selectedMetric = d3.select(this).property("value");
-                g.selectAll(".annotation").remove();
+                g.selectAll("annotation").remove();
                 updateChart();
             });
         }).catch(function(error) {
