@@ -218,7 +218,7 @@ const scenes = [
                 .attr("y", 10)
                 .text("Make, Fuel");
 
-            updateChart();
+            updateChart(selectedMetric);
 
             d3.select("#updateButton").on("click", function() {
                 selectedMetric = d3.select(this).property("value");
