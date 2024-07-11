@@ -78,16 +78,22 @@ const scenes = [
                 .attr("x1", annotationX)
                 .attr("y1", annotationY)
                 .attr("x2", annotationX)
-                .attr("y2", annotationY - 30)
+                .attr("y2", annotationY - 120)
                 .attr("stroke", "black");
 
             svg.append("text")
                 .attr("x", annotationX)
-                .attr("y", annotationY - 40)
+                .attr("y", annotationY - 130)
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
-                .style("font-size", "12px")
-                .text("Mitsubishi seems to be leading in fuel efficiency");
+                .style("font-size", "10px")
+                .selectAll("tspan")
+                .data(["Mitsubishi seems to be", "leading in fuel efficiency"])
+                .enter()
+                .append("tspan")
+                .attr("x", annotationX)
+                .attr("dy", (d, i) => i * 15)
+                .text(d => d);
         }).catch(function(error) {
             console.error("Error loading the data: ", error);
         });
