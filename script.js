@@ -148,7 +148,7 @@ const scenes = [
                     .merge(bars)
                     .transition()
                     .duration(1000)
-                    .attr("width", d => x(d[metric]))
+                    .attr("width", d => x(d[selectedMetric]))
                     .attr("y", d => y(d.Make + ' ' + d.Fuel));
 
                 bars.exit().remove();
