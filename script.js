@@ -331,8 +331,8 @@ const scenes = [
 
         svg.append("circle")
             .attr("class", "annotation")
-            .attr("cx", annotationX)
-            .attr("cy", annotationY)
+            .attr("cx", 500)
+            .attr("cy", 500)
             .attr("r", 40)
             .attr("stroke", "black")
             .attr("fill", "none");
