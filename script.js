@@ -361,7 +361,7 @@ const scenes = [
 
             d3.select("#metric").on("change", function() {
                 selectedMetric = d3.select(this).property("value");
-                svg.selectAll(".annotation").remove();
+                svg.selectAll(".annotation").remove(); // remove it if something changes. 
                 updateChart();
             });
 
