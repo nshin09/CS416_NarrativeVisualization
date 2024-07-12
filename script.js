@@ -331,30 +331,30 @@ const scenes = [
 
         svg.append("circle")
             .attr("class", "annotation")
-            .attr("cx", 700)
-            .attr("cy", 450)
+            .attr("cx", 820)
+            .attr("cy", 420)
             .attr("r", 40)
             .attr("stroke", "black")
             .attr("fill", "none");
 
         svg.append("line")
             .attr("class", "annotation")
-            .attr("x1", 700)
-            .attr("y1", 410)
-            .attr("x2", 700)
-            .attr("y2", 370)
+            .attr("x1", 820)
+            .attr("y1", 380)
+            .attr("x2", 820)
+            .attr("y2", 350)
             .attr("stroke", "black");
 
         svg.append("text")
             .attr("class", "annotation")
-            .attr("x", annotationX)
-            .attr("y", annotationY - 100)
+            .attr("x", 820)
+            .attr("y", 300)
             .attr("dy", ".35em")
             .attr("text-anchor", "middle")
             .style("font-size", "10px")
             .text("But Electric Vehicles")
             .append("tspan")
-            .attr("x", annotationX)
+            .attr("x", 820)
             .attr("dy", "1.2em")
             .text("Dominate in Fuel Efficiency");
             updateChart();
