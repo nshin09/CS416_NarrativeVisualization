@@ -331,18 +331,18 @@ const scenes = [
 
         svg.append("circle")
             .attr("class", "annotation")
-            .attr("cx", 500)
-            .attr("cy", 500)
+            .attr("cx", 700)
+            .attr("cy", 450)
             .attr("r", 40)
             .attr("stroke", "black")
             .attr("fill", "none");
 
         svg.append("line")
             .attr("class", "annotation")
-            .attr("x1", annotationX)
-            .attr("y1", annotationY - 40)
-            .attr("x2", annotationX)
-            .attr("y2", annotationY - 80)
+            .attr("x1", 700)
+            .attr("y1", 410)
+            .attr("x2", 700)
+            .attr("y2", 370)
             .attr("stroke", "black");
 
         svg.append("text")
